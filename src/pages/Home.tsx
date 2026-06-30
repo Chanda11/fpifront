@@ -283,15 +283,6 @@ const Home = () => {
     { id: "all", name: "All", icon: "📋" },
   ];
 
-  const focusAreas = [
-    { icon: TrendingUp, title: "Media Development", description: "Strengthening independent journalism and promoting professional media standards across Zambia.", color: "#2563EB" },
-    { icon: Shield, title: "Media Freedom", description: "Advocating for freedom of expression, access to information and press freedom.", color: "#EA580C" },
-    { icon: BookOpen, title: "Media Literacy", description: "Empowering citizens with critical thinking skills to identify misinformation and disinformation.", color: "#F59E0B" },
-    { icon: Scale, title: "Policy Advocacy", description: "Supporting legal and policy reforms that strengthen democracy, transparency and accountability.", color: "#2563EB" },
-    { icon: FileText, title: "Research & Publications", description: "Producing reports, studies and publications that inform media development and governance.", color: "#EA580C" },
-    { icon: Users, title: "Community Engagement", description: "Building partnerships between journalists, communities, civil society and public institutions.", color: "#F59E0B" },
-  ];
-
   const filteredActivities =
     selectedCategory === "all"
       ? activities
@@ -300,8 +291,7 @@ const Home = () => {
   const welcomeRef = useScrollReveal();
   const aboutRef = useScrollReveal();
   const activitiesRef = useScrollReveal();
-  const focusRef = useScrollReveal();
-  const galleryRef = useScrollReveal();
+
 
   // Modal handlers
   const openModal = (activity: Activity) => {
