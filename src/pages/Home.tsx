@@ -1,20 +1,30 @@
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination, Navigation, EffectFade } from "swiper/modules";
 import { motion, Variants } from "framer-motion";
+import QuickAccess from "../components/home/QuickAccess";
 import {
   Calendar,
   Users,
   MapPin,
   ArrowRight,
+  TrendingUp,
+  Shield,
+  BookOpen,
+  Scale,
+  FileText,
   Radio,
   Map,
+  BookOpenCheck,
+  Video,
+  Headphones,
+  PlayCircle,
   X,
   Target,
   Award,
   User,
-  Mail,
+  Mail
 } from "lucide-react";
 
 import "swiper/css";
@@ -22,6 +32,7 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import "swiper/css/effect-fade";
 
+// ─── Extended Activity type ───
 type Activity = {
   id: number;
   title: string;
@@ -30,7 +41,7 @@ type Activity = {
   date: string;
   location: string;
   participants: number;
-  category: "training" | "workshop" | "webinar" | "dialogue";
+  category: string;
   fullDescription?: string;
   objectives?: string[];
   outcomes?: string[];
@@ -38,7 +49,8 @@ type Activity = {
   contact?: string;
 };
 
-const FALLBACK_ACTIVITIES: Activity[] = [
+// ─── HARDCODED ACTIVITIES ──────────────────────────────────
+const HARDCODED_ACTIVITIES: Activity[] = [
   {
     id: 1,
     title: "Investigative Journalism Bootcamp",
@@ -142,9 +154,6 @@ const FALLBACK_ACTIVITIES: Activity[] = [
   },
 ];
 
-const FALLBACK_IMAGE =
-  "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=600";
-
 const useScrollReveal = () => {
   const ref = useRef<HTMLElement | null>(null);
 
@@ -177,7 +186,7 @@ const Eyebrow = ({ label, light = false }: { label: string; light?: boolean }) =
   </div>
 );
 
-// Animation variants
+// ─── Animation variants ───
 const sectionVariants: Variants = {
   hidden: { opacity: 0, y: 30 },
   visible: {
@@ -203,19 +212,20 @@ const cardVariants: Variants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.4, ease: "easeInOut" },
+    transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] },
   },
 };
 
-// -----------------------------
+// ──────────────────────────────────────────────
 
 const Home = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [modalActivity, setModalActivity] = useState<Activity | null>(null);
+  const [activities, setActivities] = useState<Activity[]>(HARDCODED_ACTIVITIES);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const activities = FALLBACK_ACTIVITIES;
-  const loading = false;
-  const error: string | null = null;
+  // ─── Modal state ───
+  const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null);
 
   const heroSlides = [
     {
@@ -248,7 +258,7 @@ const Home = () => {
     },
   ];
 
-  // ========== ONLY TWO QUICK ACCESS ITEMS ==========
+  // ─── QUICK ACCESS – ONLY TWO CARDS ──────────────────
   const quickAccess = [
     {
       title: "Explore MIL Hubs",
@@ -268,6 +278,19 @@ const Home = () => {
 
   const categories = [
     { id: "all", name: "All", icon: "📋" },
+    { id: "training", name: "Trainings", icon: "🎓" },
+    { id: "workshop", name: "Workshops", icon: "🔧" },
+    { id: "webinar", name: "Webinars", icon: "💻" },
+    { id: "dialogue", name: "Dialogues", icon: "💬" },
+  ];
+
+  const focusAreas = [
+    { icon: TrendingUp, title: "Media Development", description: "Strengthening independent journalism and promoting professional media standards across Zambia.", color: "#2563EB" },
+    { icon: Shield, title: "Media Freedom", description: "Advocating for freedom of expression, access to information and press freedom.", color: "#EA580C" },
+    { icon: BookOpen, title: "Media Literacy", description: "Empowering citizens with critical thinking skills to identify misinformation and disinformation.", color: "#F59E0B" },
+    { icon: Scale, title: "Policy Advocacy", description: "Supporting legal and policy reforms that strengthen democracy, transparency and accountability.", color: "#2563EB" },
+    { icon: FileText, title: "Research & Publications", description: "Producing reports, studies and publications that inform media development and governance.", color: "#EA580C" },
+    { icon: Users, title: "Community Engagement", description: "Building partnerships between journalists, communities, civil society and public institutions.", color: "#F59E0B" },
   ];
 
   const filteredActivities =
@@ -278,15 +301,17 @@ const Home = () => {
   const welcomeRef = useScrollReveal();
   const aboutRef = useScrollReveal();
   const activitiesRef = useScrollReveal();
+  const focusRef = useScrollReveal();
+  const galleryRef = useScrollReveal();
 
-  // Modal handlers
+  // ─── Modal handlers ───
   const openModal = (activity: Activity) => {
-    setModalActivity(activity);
+    setSelectedActivity(activity);
     document.body.style.overflow = "hidden";
   };
 
   const closeModal = () => {
-    setModalActivity(null);
+    setSelectedActivity(null);
     document.body.style.overflow = "auto";
   };
 
@@ -294,13 +319,13 @@ const Home = () => {
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === "Escape") closeModal();
     };
-    if (modalActivity) {
+    if (selectedActivity) {
       document.addEventListener("keydown", handleEsc);
     }
     return () => {
       document.removeEventListener("keydown", handleEsc);
     };
-  }, [modalActivity]);
+  }, [selectedActivity]);
 
   return (
     <div style={{ fontFamily: "Inter, system-ui, sans-serif", background: "linear-gradient(135deg, #F0F9FF 0%, #FFF7ED 100%)", color: "#1A1A2E" }}>
@@ -358,57 +383,8 @@ const Home = () => {
         .act-swiper .swiper-pagination-bullet-active { opacity: 1 !important; }
         .act-swiper .swiper-button-next,
         .act-swiper .swiper-button-prev { color: #2563EB !important; }
-
-        .cat-filter-btn {
-          padding: 5px 14px;
-          border-radius: 999px;
-          font-size: 12px;
-          font-weight: 500;
-          cursor: pointer;
-          border: 1px solid #E2E8F0;
-          background: #fff;
-          color: #374151;
-          transition: transform 0.15s, box-shadow 0.15s, background 0.15s, color 0.15s, border-color 0.15s;
-        }
-        .cat-filter-btn:hover { border-color: #CBD5E1; }
-        .cat-filter-btn:focus-visible { outline: 2px solid #2563EB; outline-offset: 2px; }
-        .cat-filter-btn.active {
-          background: linear-gradient(135deg,#2563EB,#EA580C);
-          color: #fff;
-          border-color: transparent;
-          box-shadow: 0 2px 6px rgba(37,99,235,0.3);
-          transform: scale(1.02);
-        }
-
-        .media-card {
-          background: #fff;
-          border-radius: 24px;
-          overflow: hidden;
-          box-shadow: 0 15px 40px rgba(0,0,0,.08);
-          transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .media-card:hover {
-          transform: translateY(-6px);
-          box-shadow: 0 22px 50px rgba(0,0,0,.12);
-        }
-        .media-card img { transition: transform 0.5s ease; }
-        .media-card:hover img { transform: scale(1.04); }
-
-        .pill-link:focus-visible,
-        .pill-link:focus,
-        a:focus-visible,
-        button:focus-visible {
-          outline: 2px solid #2563EB;
-          outline-offset: 2px;
-        }
-
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        @media (prefers-reduced-motion: reduce) {
-          .sr-section, .media-card, .media-card img { transition: none !important; }
-        }
-
-        /* Modal overlay */
         .modal-overlay {
           position: fixed;
           inset: 0;
@@ -497,26 +473,22 @@ const Home = () => {
                   <motion.h1 initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.15 }} style={{ fontFamily: "Georgia, serif", fontSize: "clamp(1.6rem, 4vw, 2.8rem)", fontWeight: 900, lineHeight: 1.2, color: "#FFFFFF", margin: "0 0 6px", maxWidth: 700 }}>
                     {slide.title}
                   </motion.h1>
-                  {slide.highlight && (
-                    <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.25 }} style={{ marginBottom: 10 }}>
-                      <span style={{ fontFamily: "Georgia, serif", fontSize: "clamp(1.8rem, 4.5vw, 3.2rem)", fontWeight: 900, fontStyle: "italic", background: "linear-gradient(135deg, #FDE047, #FFB347)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", display: "inline-block" }}>
-                        {slide.highlight}
-                      </span>
-                    </motion.div>
-                  )}
-                  {slide.subtitle && (
-                    <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.35 }} style={{ fontSize: "clamp(0.9rem, 1.8vw, 1.1rem)", color: "rgba(255,255,255,0.9)", margin: "0 0 8px", fontWeight: 400 }}>
-                      {slide.subtitle}
-                    </motion.p>
-                  )}
+                  <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.25 }} style={{ marginBottom: 10 }}>
+                    <span style={{ fontFamily: "Georgia, serif", fontSize: "clamp(1.8rem, 4.5vw, 3.2rem)", fontWeight: 900, fontStyle: "italic", background: "linear-gradient(135deg, #FDE047, #FFB347)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", display: "inline-block" }}>
+                      {slide.highlight}
+                    </span>
+                  </motion.div>
+                  <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.35 }} style={{ fontSize: "clamp(0.9rem, 1.8vw, 1.1rem)", color: "rgba(255,255,255,0.9)", margin: "0 0 8px", fontWeight: 400 }}>
+                    {slide.subtitle}
+                  </motion.p>
                   <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.45 }} style={{ fontSize: 13, color: "rgba(255,255,255,0.85)", maxWidth: 420, lineHeight: 1.6, margin: "0 0 24px" }}>
                     {slide.description}
                   </motion.p>
                   <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.55 }} style={{ display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center" }}>
-                    <Link to={slide.link} className="pill-link" style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "linear-gradient(135deg, #2563EB, #EA580C)", color: "#fff", fontWeight: 600, fontSize: 12, padding: "8px 20px", borderRadius: 999, textDecoration: "none", boxShadow: "0 4px 12px rgba(0,0,0,0.2)" }}>
+                    <Link to={slide.link} style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "linear-gradient(135deg, #2563EB, #EA580C)", color: "#fff", fontWeight: 600, fontSize: 12, padding: "8px 20px", borderRadius: 999, textDecoration: "none", boxShadow: "0 4px 12px rgba(0,0,0,0.2)" }}>
                       {slide.cta} <ArrowRight size={12} />
                     </Link>
-                    <a href="#about" className="pill-link" style={{ fontSize: 12, color: "rgba(255,255,255,0.8)", textDecoration: "underline", textUnderlineOffset: 3 }}>Learn about FPI</a>
+                    <a href="#about" style={{ fontSize: 12, color: "rgba(255,255,255,0.8)", textDecoration: "underline", textUnderlineOffset: 3 }}>Learn about FPI</a>
                   </motion.div>
                 </div>
               </div>
@@ -525,7 +497,7 @@ const Home = () => {
         </Swiper>
       </div>
 
-      {/* ========== QUICK ACCESS - Two cards, properly arranged ========== */}
+      {/* ========== QUICK ACCESS – TWO CARDS, CENTERED ========== */}
       <motion.section
         initial="hidden"
         whileInView="visible"
@@ -539,10 +511,10 @@ const Home = () => {
           whileInView="visible"
           viewport={{ once: true }}
           style={{
-            maxWidth: 800, // slightly narrower to keep cards neat
+            maxWidth: 800,
             margin: "0 auto",
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+            gridTemplateColumns: "repeat(2, 1fr)",
             gap: 24,
           }}
         >
@@ -570,7 +542,6 @@ const Home = () => {
                   cursor: "pointer",
                 }}
               >
-                {/* Top accent stripe */}
                 <div
                   style={{
                     position: "absolute",
@@ -643,7 +614,7 @@ const Home = () => {
         </motion.div>
       </motion.section>
 
-      {/* ========== WELCOME SECTION ========== */}
+      {/* ========== WELCOME ========== */}
       <motion.section
         ref={welcomeRef}
         className="sr-section"
@@ -664,7 +635,7 @@ const Home = () => {
         </div>
       </motion.section>
 
-      {/* ========== ABOUT FPI ========== */}
+      {/* ========== ABOUT ========== */}
       <motion.section
         id="about"
         ref={aboutRef}
@@ -693,7 +664,7 @@ const Home = () => {
               <p style={{ color: "#4B5563", fontSize: 13, lineHeight: 1.7, marginBottom: 20 }}>
                 Through training, research, advocacy and community engagement, we empower journalists, civil society organizations and communities.
               </p>
-              <Link to="/about" className="pill-link" style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "linear-gradient(135deg,#2563EB,#EA580C)", color: "#fff", fontSize: 12, fontWeight: 600, padding: "8px 20px", borderRadius: 999, textDecoration: "none", boxShadow: "0 2px 8px rgba(0,0,0,0.1)" }}>
+              <Link to="/about" style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "linear-gradient(135deg,#2563EB,#EA580C)", color: "#fff", fontSize: 12, fontWeight: 600, padding: "8px 20px", borderRadius: 999, textDecoration: "none", boxShadow: "0 2px 8px rgba(0,0,0,0.1)" }}>
                 Learn More About FPI <ArrowRight size={12} />
               </Link>
             </motion.div>
@@ -701,7 +672,7 @@ const Home = () => {
         </div>
       </motion.section>
 
-      {/* ========== ACTIVITIES SECTION ========== */}
+      {/* ========== ACTIVITIES (carousel + modal) ========== */}
       <motion.section
         ref={activitiesRef}
         className="sr-section"
@@ -722,32 +693,26 @@ const Home = () => {
               <button
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.id)}
-                aria-pressed={selectedCategory === cat.id}
-                className={`cat-filter-btn ${selectedCategory === cat.id ? "active" : ""}`}
+                style={{
+                  padding: "5px 14px", borderRadius: 999, fontSize: 12, fontWeight: 500, cursor: "pointer", border: "none",
+                  ...(selectedCategory === cat.id
+                    ? { background: "linear-gradient(135deg,#2563EB,#EA580C)", color: "#fff", boxShadow: "0 2px 6px rgba(37,99,235,0.3)", transform: "scale(1.02)" }
+                    : { background: "#fff", color: "#374151", border: "1px solid #E2E8F0" })
+                }}
               >
                 {cat.icon} {cat.name}
               </button>
             ))}
           </div>
-
           {loading && (
             <div style={{ textAlign: "center", padding: "30px 0" }}>
               <div style={{ width: 28, height: 28, borderRadius: "50%", border: "3px solid #2563EB", borderRightColor: "transparent", animation: "spin 0.8s linear infinite", margin: "0 auto" }} />
               <p style={{ color: "#6B7280", marginTop: 10, fontSize: 12 }}>Loading activities...</p>
             </div>
           )}
-
           {error && <div style={{ textAlign: "center", color: "#DC2626", padding: 20, fontSize: 13 }}>Error: {error}</div>}
-
-          {!loading && !error && filteredActivities.length === 0 && (
-            <div style={{ textAlign: "center", color: "#6B7280", padding: "40px 0", fontSize: 13 }}>
-              No activities in this category yet — check back soon.
-            </div>
-          )}
-
-          {!loading && !error && filteredActivities.length > 0 && (
+          {!loading && !error && (
             <Swiper
-              key={selectedCategory}
               modules={[Autoplay, Pagination, Navigation]}
               spaceBetween={20}
               slidesPerView={1}
@@ -767,36 +732,20 @@ const Home = () => {
                     style={{ background: "#fff", borderRadius: 16, overflow: "hidden", boxShadow: "0 2px 12px rgba(0,0,0,0.05)", height: "100%", display: "flex", flexDirection: "column" }}
                   >
                     <div style={{ position: "relative", height: 140 }}>
-                      <img
-                        src={activity.image}
-                        alt={activity.title}
-                        loading="lazy"
-                        style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).onerror = null;
-                          (e.target as HTMLImageElement).src = FALLBACK_IMAGE;
-                        }}
-                      />
-                      <span style={{ position: "absolute", top: 8, left: 8, background: "linear-gradient(135deg,#2563EB,#EA580C)", color: "#fff", fontSize: 9, fontWeight: 600, padding: "2px 8px", borderRadius: 20, textTransform: "capitalize" }}>
-                        {activity.category}
-                      </span>
+                      <img src={activity.image} alt={activity.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} onError={(e) => { (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=600"; }} />
+                      <span style={{ position: "absolute", top: 8, left: 8, background: "linear-gradient(135deg,#2563EB,#EA580C)", color: "#fff", fontSize: 9, fontWeight: 600, padding: "2px 8px", borderRadius: 20 }}>{activity.category}</span>
                     </div>
                     <div style={{ padding: 16, display: "flex", flexDirection: "column", flex: 1 }}>
                       <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 6, lineHeight: 1.3 }}>{activity.title}</h3>
-                      <p style={{ fontSize: 12, color: "#6B7280", lineHeight: 1.5, marginBottom: 12, flex: 1 }}>
-                        {activity.description.length > 80
-                          ? `${activity.description.substring(0, 80)}...`
-                          : activity.description}
-                      </p>
+                      <p style={{ fontSize: 12, color: "#6B7280", lineHeight: 1.5, marginBottom: 12, flex: 1 }}>{activity.description.substring(0, 80)}...</p>
                       <div style={{ borderTop: "1px solid #F0F0F0", paddingTop: 10, marginTop: "auto" }}>
-                        <div style={{ display: "flex", flexWrap: "wrap", gap: 8, color: "#9CA3AF", fontSize: 10, marginBottom: 8 }}>
-                          <span style={{ display: "inline-flex", alignItems: "center", gap: 3 }}><Calendar size={10} /> {activity.date}</span>
-                          <span style={{ display: "inline-flex", alignItems: "center", gap: 3 }}><MapPin size={10} /> {activity.location}</span>
-                          <span style={{ display: "inline-flex", alignItems: "center", gap: 3 }}><Users size={10} /> {activity.participants}</span>
+                        <div style={{ display: "flex", gap: 8, color: "#9CA3AF", fontSize: 10, marginBottom: 8 }}>
+                          <span><Calendar size={10} /> {activity.date}</span>
+                          <span><MapPin size={10} /> {activity.location}</span>
+                          <span><Users size={10} /> {activity.participants}</span>
                         </div>
                         <button
                           onClick={() => openModal(activity)}
-                          className="pill-link"
                           style={{ color: "#2563EB", fontSize: 11, fontWeight: 500, background: "none", border: "none", cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 4, padding: 0 }}
                         >
                           Learn More <ArrowRight size={10} />
@@ -811,17 +760,141 @@ const Home = () => {
         </div>
       </motion.section>
 
-      {/* ========== MEDIA HIGHLIGHTS (unchanged) ========== */}
-      {/* ... you would have this section here; keep your existing code ... */}
+      {/* ========== MEDIA HIGHLIGHTS ========== */}
+      <section
+        style={{
+          padding: "80px 20px",
+          background: "linear-gradient(135deg,#ffffff,#F8FAFC)",
+        }}
+      >
+        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: 50 }}>
+            <Eyebrow label="Media Centre" />
+            <h2 style={{ fontSize: "clamp(2rem,4vw,3rem)", fontWeight: 800, marginBottom: 12 }}>Media Highlights</h2>
+            <p style={{ maxWidth: 650, margin: "0 auto", color: "#64748B", lineHeight: 1.8 }}>
+              Explore our latest videos and radio programmes promoting media freedom and media literacy in Zambia.
+            </p>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(420px,1fr))", gap: 30 }}>
+            <div style={{ background: "#fff", borderRadius: 24, overflow: "hidden", boxShadow: "0 15px 40px rgba(0,0,0,.08)" }}>
+              <img src="/images/youtube-logo.jpg" alt="YouTube" style={{ width: "100%", height: 260, objectFit: "cover" }} />
+              <div style={{ padding: 30 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 18, color: "#DC2626" }}>
+                  <Video size={28} />
+                  <strong>Latest YouTube Video</strong>
+                </div>
+                <h3 style={{ marginBottom: 12 }}>Building Media Literacy Across Zambia</h3>
+                <p style={{ color: "#64748B", lineHeight: 1.7, marginBottom: 25 }}>
+                  Watch our latest documentary, interviews and community outreach programmes.
+                </p>
+                <a href="https://youtube.com/" target="_blank" rel="noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#DC2626", color: "#fff", padding: "12px 24px", borderRadius: 999, textDecoration: "none", fontWeight: 600 }}>
+                  <PlayCircle size={18} /> Watch on YouTube
+                </a>
+              </div>
+            </div>
+            <div style={{ background: "#fff", borderRadius: 24, overflow: "hidden", boxShadow: "0 15px 40px rgba(0,0,0,.08)" }}>
+              <img src="/images/radio1.jpg" alt="Radio" style={{ width: "100%", height: 260, objectFit: "cover" }} />
+              <div style={{ padding: 30 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 18, color: "#EA580C" }}>
+                  <Headphones size={28} />
+                  <strong>Radio Spotlight</strong>
+                </div>
+                <h3>Community Radio Awareness Campaigns</h3>
+                <p style={{ color: "#64748B", margin: "18px 0", lineHeight: 1.7 }}>
+                  Listen to FPI Zambia radio programmes promoting media literacy and civic participation.
+                </p>
+                <Link to="/mil/radio-spots" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "linear-gradient(135deg,#2563EB,#EA580C)", color: "#fff", padding: "12px 24px", borderRadius: 999, textDecoration: "none", fontWeight: 600 }}>
+                  <Headphones size={18} /> Listen Now
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-      {/* ========== FOCUS AREAS (unchanged) ========== */}
-      {/* ... keep existing ... */}
+      {/* ========== FOCUS AREAS ========== */}
+      <motion.section
+        ref={focusRef}
+        className="sr-section"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.1 }}
+        variants={sectionVariants}
+        style={{ padding: "50px 20px", background: "#fff" }}
+      >
+        <div style={{ maxWidth: 1120, margin: "0 auto", textAlign: "center" }}>
+          <Eyebrow label="Our Work" />
+          <h2 style={{ fontFamily: "Georgia,serif", fontWeight: 800, fontSize: "clamp(1.4rem, 3.5vw, 2rem)", marginBottom: 8 }}>Focus Areas</h2>
+          <p style={{ color: "#6B7280", fontSize: 13, maxWidth: 600, margin: "0 auto 32px", lineHeight: 1.6 }}>
+            FPI Zambia works to strengthen media freedom, media literacy, democratic governance and community participation.
+          </p>
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: 20 }}
+          >
+            {focusAreas.map((area, i) => {
+              const Icon = area.icon;
+              return (
+                <motion.div
+                  key={i}
+                  variants={cardVariants}
+                  whileHover={{ scale: 1.03, boxShadow: "0 8px 24px rgba(0,0,0,0.12)" }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                  style={{ background: "linear-gradient(135deg, #F0F9FF, #FFF7ED)", borderRadius: 20, padding: 20, textAlign: "left", border: "1px solid #E2E8F0" }}
+                >
+                  <div style={{ width: 36, height: 36, borderRadius: 12, marginBottom: 12, display: "flex", alignItems: "center", justifyContent: "center", background: `linear-gradient(135deg, ${area.color}, #F59E0B)` }}>
+                    <Icon size={18} color="#fff" />
+                  </div>
+                  <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 6 }}>{area.title}</h3>
+                  <p style={{ fontSize: 12, color: "#6B7280", lineHeight: 1.5 }}>{area.description}</p>
+                </motion.div>
+              );
+            })}
+          </motion.div>
+        </div>
+      </motion.section>
 
-      {/* ========== GALLERY (unchanged) ========== */}
-      {/* ... keep existing ... */}
+      {/* ========== GALLERY ========== */}
+      <motion.section
+        ref={galleryRef}
+        className="sr-section"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.1 }}
+        variants={sectionVariants}
+        style={{ padding: "50px 20px", background: "#F8FAFF" }}
+      >
+        <div style={{ maxWidth: 1120, margin: "0 auto", textAlign: "center" }}>
+          <Eyebrow label="Highlights" />
+          <h2 style={{ fontFamily: "Georgia,serif", fontWeight: 800, fontSize: "clamp(1.4rem, 3.5vw, 2rem)", marginBottom: 6 }}>Photo Gallery</h2>
+          <p style={{ color: "#6B7280", fontSize: 13, marginBottom: 32 }}>Highlights from FPI Zambia activities.</p>
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: 16 }}
+          >
+            {[1, 2, 3, 4].map((_, idx) => (
+              <motion.div
+                key={idx}
+                variants={cardVariants}
+                whileHover={{ scale: 1.05, boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}
+                transition={{ type: "spring", stiffness: 300 }}
+                style={{ borderRadius: 14, overflow: "hidden", aspectRatio: "1 / 1", cursor: "pointer" }}
+              >
+                <img src={`/images/activity-${idx + 1}.jpg`} alt={`Gallery ${idx + 1}`} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.4s" }} />
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </motion.section>
 
-      {/* ========== MODAL ========== */}
-      {modalActivity && (
+      {/* ========== DETAIL MODAL ========== */}
+      {selectedActivity && (
         <div className="modal-overlay" onClick={closeModal}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <button className="modal-close" onClick={closeModal} aria-label="Close modal">
@@ -829,41 +902,41 @@ const Home = () => {
             </button>
 
             <img
-              src={modalActivity.image}
-              alt={modalActivity.title}
+              src={selectedActivity.image}
+              alt={selectedActivity.title}
               style={{ width: "100%", height: 200, objectFit: "cover", borderRadius: 12, marginBottom: 20 }}
               onError={(e) => {
-                (e.target as HTMLImageElement).src = FALLBACK_IMAGE;
+                (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=600";
               }}
             />
 
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
               <span style={{ background: "linear-gradient(135deg,#2563EB,#EA580C)", color: "#fff", fontSize: 10, fontWeight: 600, padding: "2px 12px", borderRadius: 20, textTransform: "capitalize" }}>
-                {modalActivity.category}
+                {selectedActivity.category}
               </span>
               <span style={{ fontSize: 12, color: "#6B7280", display: "flex", alignItems: "center", gap: 4 }}>
-                <Calendar size={12} /> {modalActivity.date}
+                <Calendar size={12} /> {selectedActivity.date}
               </span>
               <span style={{ fontSize: 12, color: "#6B7280", display: "flex", alignItems: "center", gap: 4 }}>
-                <MapPin size={12} /> {modalActivity.location}
+                <MapPin size={12} /> {selectedActivity.location}
               </span>
             </div>
 
             <h2 style={{ fontFamily: "Georgia,serif", fontSize: "1.6rem", fontWeight: 800, marginBottom: 12 }}>
-              {modalActivity.title}
+              {selectedActivity.title}
             </h2>
 
             <p style={{ fontSize: 14, lineHeight: 1.8, color: "#374151", marginBottom: 20 }}>
-              {modalActivity.fullDescription || modalActivity.description}
+              {selectedActivity.fullDescription || selectedActivity.description}
             </p>
 
-            {modalActivity.objectives && modalActivity.objectives.length > 0 && (
+            {selectedActivity.objectives && selectedActivity.objectives.length > 0 && (
               <div style={{ marginBottom: 20 }}>
                 <h4 style={{ fontSize: 14, fontWeight: 700, display: "flex", alignItems: "center", gap: 6, marginBottom: 8 }}>
                   <Target size={16} /> Objectives
                 </h4>
                 <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-                  {modalActivity.objectives.map((obj, i) => (
+                  {selectedActivity.objectives.map((obj, i) => (
                     <li key={i} style={{ fontSize: 13, color: "#4B5563", padding: "4px 0", display: "flex", gap: 8 }}>
                       <span style={{ color: "#2563EB" }}>•</span> {obj}
                     </li>
@@ -872,13 +945,13 @@ const Home = () => {
               </div>
             )}
 
-            {modalActivity.outcomes && modalActivity.outcomes.length > 0 && (
+            {selectedActivity.outcomes && selectedActivity.outcomes.length > 0 && (
               <div style={{ marginBottom: 20 }}>
                 <h4 style={{ fontSize: 14, fontWeight: 700, display: "flex", alignItems: "center", gap: 6, marginBottom: 8 }}>
                   <Award size={16} /> Outcomes
                 </h4>
                 <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-                  {modalActivity.outcomes.map((out, i) => (
+                  {selectedActivity.outcomes.map((out, i) => (
                     <li key={i} style={{ fontSize: 13, color: "#4B5563", padding: "4px 0", display: "flex", gap: 8 }}>
                       <span style={{ color: "#EA580C" }}>✦</span> {out}
                     </li>
@@ -888,14 +961,14 @@ const Home = () => {
             )}
 
             <div style={{ borderTop: "1px solid #E5E7EB", paddingTop: 16, display: "flex", flexWrap: "wrap", gap: 20, fontSize: 13, color: "#6B7280" }}>
-              {modalActivity.organizer && (
+              {selectedActivity.organizer && (
                 <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                  <User size={14} /> <strong>Organizer:</strong> {modalActivity.organizer}
+                  <User size={14} /> <strong>Organizer:</strong> {selectedActivity.organizer}
                 </span>
               )}
-              {modalActivity.contact && (
+              {selectedActivity.contact && (
                 <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                  <Mail size={14} /> <strong>Contact:</strong> <a href={`mailto:${modalActivity.contact}`} style={{ color: "#2563EB", textDecoration: "none" }}>{modalActivity.contact}</a>
+                  <Mail size={14} /> <strong>Contact:</strong> <a href={`mailto:${selectedActivity.contact}`} style={{ color: "#2563EB", textDecoration: "none" }}>{selectedActivity.contact}</a>
                 </span>
               )}
             </div>
