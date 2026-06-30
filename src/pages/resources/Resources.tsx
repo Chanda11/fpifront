@@ -1,12 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import {
-  Search,
   BookOpen,
   FileText,
   Newspaper,
   GraduationCap,
   Download,
-  ArrowRight,
   Mail,
 } from "lucide-react";
 

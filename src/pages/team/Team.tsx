@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import {
   Users,
-  Mail,
   ArrowRight,
   Briefcase,
 } from "lucide-react";
@@ -179,20 +178,6 @@ const AnimatedSection = ({
   );
 };
 
-const GradText = ({ children }: { children: React.ReactNode }) => (
-  <span
-    style={{
-      background: "linear-gradient(120deg, #E8610A, #F5A623)",
-      WebkitBackgroundClip: "text",
-      WebkitTextFillColor: "transparent",
-      backgroundClip: "text",
-      fontStyle: "italic",
-      display: "inline-block",
-    }}
-  >
-    {children}
-  </span>
-);
 
 // ============================================================
 // MAIN COMPONENT

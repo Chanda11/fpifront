@@ -103,7 +103,9 @@ const ProvinceHubs = () => {
   }, [selectedHub]);
 
   const key = province?.toLowerCase() || "";
-  const provinceHubs = provinceData[key] || [];
+const provinceHubs = useMemo(() => {
+  return provinceData[province || ""] || [];
+}, [province]);
   const theme = PROVINCE_THEMES[key] || PROVINCE_THEMES.default;
   const displayName = province
     ? province.charAt(0).toUpperCase() + province.slice(1)

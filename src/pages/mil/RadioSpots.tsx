@@ -80,7 +80,7 @@ const embedUrl = (id: string) =>
   `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`;
 
 export default function RadioSpots() {
-  const [search, setSearch] = useState("");
+  const [search] = useState("");
   const [year, setYear] = useState("All");
   const [selectedSpot, setSelectedSpot] = useState<Spot | null>(null);
   const modalRef = useRef<HTMLDivElement | null>(null);
