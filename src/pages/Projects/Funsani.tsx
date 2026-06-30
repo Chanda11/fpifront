@@ -7,7 +7,6 @@ import {
   ArrowRight,
   Heart,
   Target,
-  Zap,
   Eye,
 } from "lucide-react";
 

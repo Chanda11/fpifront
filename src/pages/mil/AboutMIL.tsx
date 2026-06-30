@@ -1,4 +1,4 @@
-import { BookOpen, Globe, ShieldCheck, Users, } from "lucide-react";
+import { BookOpen, Globe, ShieldCheck, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 
 // ─── tokens ───────────────────────────────────────────────────────────────────
@@ -61,19 +61,29 @@ function Eyebrow({ label, light = false }: { label: string; light?: boolean }) {
 const AboutMIL = () => (
   <div style={{ fontFamily: SANS }}>
 
-    {/* ── HERO (fixed background) ─────────────────────────────────────────── */}
+    {/* ── HERO (fixed background → replaced with <img>) ─────────────────── */}
     <section
       style={{
         position: "relative",
         height: "100vh",
         overflow: "hidden",
-        backgroundImage: `url("/images/note.jpg")`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundAttachment: "fixed",   // static / fixed background
       }}
     >
-      {/* dark gradient overlay (unchanged) */}
+      {/* Background image as an <img> (no CSS background) */}
+      <img
+        src="/images/note.jpg"
+        alt="Media and Information Literacy hero background"
+        style={{
+          position: "absolute",
+          inset: 0,
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+          zIndex: 0,
+        }}
+      />
+
+      {/* Dark gradient overlay */}
       <div
         aria-hidden="true"
         style={{
@@ -81,16 +91,25 @@ const AboutMIL = () => (
           inset: 0,
           background:
             "linear-gradient(105deg, rgba(8,12,30,0.93) 38%, rgba(8,12,30,0.50) 70%, transparent)",
+          zIndex: 1,
         }}
       />
 
-      {/* left red accent stripe (unchanged) */}
+      {/* Left red accent stripe */}
       <div
         aria-hidden="true"
-        style={{ position: "absolute", top: 0, left: 0, width: 5, height: "100%", background: RED }}
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: 5,
+          height: "100%",
+          background: RED,
+          zIndex: 2,
+        }}
       />
 
-      {/* text (unchanged) */}
+      {/* Text content */}
       <div
         style={{
           position: "absolute",
@@ -98,6 +117,7 @@ const AboutMIL = () => (
           display: "flex",
           alignItems: "center",
           padding: "0 1.5rem",
+          zIndex: 3,
         }}
       >
         <div style={{ maxWidth: 700, width: "100%" }}>
@@ -137,7 +157,7 @@ const AboutMIL = () => (
           </p>
 
           <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-              <Link
+            <Link
               to="/mil/radio-spots"
               style={{
                 background: RED,
@@ -247,89 +267,67 @@ const AboutMIL = () => (
     </section>
 
     {/* ───────────────── Featured Campaign ───────────────── */}
-<section className="py-24 bg-[#0B1324]">
-  <div className="max-w-7xl mx-auto px-6">
-
-    <div className="grid lg:grid-cols-2 gap-16 items-center">
-
-      {/* LEFT CONTENT */}
-      <div>
-
-        <span className="uppercase tracking-[0.15em] text-xs font-semibold text-[#C9A84C]">
-          Featured Campaign
-        </span>
-
-        <h2 className="font-serif text-5xl font-black text-white mt-4 mb-6 leading-tight">
-          Building a
-          <br />
-          <span className="text-[#C9A84C]">
-            Media Literate Zambia
-          </span>
-        </h2>
-
-        <p className="text-white/70 text-lg leading-8 mb-8">
-          Watch how FPI Zambia is empowering young people,
-          journalists and communities with Media &
-          Information Literacy skills through nationwide
-          campaigns, training programmes and community
-          engagement initiatives.
-        </p>
-
-        <div className="flex flex-wrap gap-4">
-
-          <a
-            href="https://youtube.com/"
-            target="_blank"
-            rel="noreferrer"
-            className="bg-[#C9293A] hover:bg-red-700 text-white px-8 py-4 rounded-xl font-semibold transition"
-          >
-            ▶ Watch on YouTube
-          </a>
-
-          <Link
-            to="/mil/radio-spots"
-            className="border border-white/30 hover:bg-white hover:text-[#0B1324] text-white px-8 py-4 rounded-xl font-semibold transition"
-          >
-            🎙 Radio Spots
-          </Link>
-
-        </div>
-
-      </div>
-
-      {/* RIGHT IMAGE */}
-
-      <div className="relative group">
-
-        <img
-          src="/images/activity-2.jpg"
-          alt="MIL Campaign"
-          className="rounded-3xl shadow-2xl w-full h-[500px] object-cover"
-        />
-
-        <div className="absolute inset-0 bg-black/40 rounded-3xl" />
-
-        <a
-          href="https://youtube.com/"
-          target="_blank"
-          rel="noreferrer"
-          className="absolute inset-0 flex items-center justify-center"
-        >
-          <div className="w-24 h-24 rounded-full bg-[#C9293A] hover:scale-110 transition flex items-center justify-center shadow-2xl">
-
-            <span className="text-white text-5xl ml-2">
-              ▶
+    <section className="py-24 bg-[#0B1324]">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="grid lg:grid-cols-2 gap-16 items-center">
+          {/* LEFT CONTENT */}
+          <div>
+            <span className="uppercase tracking-[0.15em] text-xs font-semibold text-[#C9A84C]">
+              Featured Campaign
             </span>
-
+            <h2 className="font-serif text-5xl font-black text-white mt-4 mb-6 leading-tight">
+              Building a
+              <br />
+              <span className="text-[#C9A84C]">
+                Media Literate Zambia
+              </span>
+            </h2>
+            <p className="text-white/70 text-lg leading-8 mb-8">
+              Watch how FPI Zambia is empowering young people,
+              journalists and communities with Media &
+              Information Literacy skills through nationwide
+              campaigns, training programmes and community
+              engagement initiatives.
+            </p>
+            <div className="flex flex-wrap gap-4">
+              <a
+                href="https://youtube.com/"
+                target="_blank"
+                rel="noreferrer"
+                className="bg-[#C9293A] hover:bg-red-700 text-white px-8 py-4 rounded-xl font-semibold transition"
+              >
+                ▶ Watch on YouTube
+              </a>
+              <Link
+                to="/mil/radio-spots"
+                className="border border-white/30 hover:bg-white hover:text-[#0B1324] text-white px-8 py-4 rounded-xl font-semibold transition"
+              >
+                🎙 Radio Spots
+              </Link>
+            </div>
           </div>
-        </a>
-
+          {/* RIGHT IMAGE */}
+          <div className="relative group">
+            <img
+              src="/images/activity-2.jpg"
+              alt="MIL Campaign"
+              className="rounded-3xl shadow-2xl w-full h-[500px] object-cover"
+            />
+            <div className="absolute inset-0 bg-black/40 rounded-3xl" />
+            <a
+              href="https://youtube.com/"
+              target="_blank"
+              rel="noreferrer"
+              className="absolute inset-0 flex items-center justify-center"
+            >
+              <div className="w-24 h-24 rounded-full bg-[#C9293A] hover:scale-110 transition flex items-center justify-center shadow-2xl">
+                <span className="text-white text-5xl ml-2">▶</span>
+              </div>
+            </a>
+          </div>
+        </div>
       </div>
-
-    </div>
-
-  </div>
-</section>
+    </section>
 
     {/* ── FOCUS AREAS (unchanged) ───────────────────────────────────────── */}
     <section className="py-24 bg-[#f8f6f2]">
@@ -391,62 +389,50 @@ const AboutMIL = () => (
         </div>
       </div>
     </section>
+
     {/* ======================= MIL IN ACTION ======================= */}
-<section className="py-24 bg-white">
-  <div className="max-w-7xl mx-auto px-6">
-
-    <div className="text-center mb-16">
-
-      <span className="uppercase tracking-[0.15em] text-xs font-semibold text-[#C9293A]">
-        Gallery
-      </span>
-
-      <h2 className="font-serif text-5xl font-black mt-4 mb-6">
-        Media Literacy
-        <span className="text-[#C9293A] italic">
-          {" "}In Action
-        </span>
-      </h2>
-
-      <p className="max-w-3xl mx-auto text-gray-600 leading-8">
-        Explore moments from our community outreach,
-        digital literacy campaigns, media training sessions,
-        school engagements and public awareness programmes
-        across Zambia.
-      </p>
-
-    </div>
-
-    <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
-
-      {[
-        "/images/mil1.jpg",
-        "/images/mil2.jpg",
-        "/images/mil5.jpg",
-        "/images/school2.jpg",
-        "/images/mil4.jpg",
-        "/images/note.jpg",
-      ].map((image, index) => (
-
-        <div
-          key={index}
-          className="overflow-hidden rounded-3xl group shadow-lg"
-        >
-
-          <img
-            src={image}
-            alt="MIL Activity"
-            className="w-full h-80 object-cover transition duration-700 group-hover:scale-110"
-          />
-
+    <section className="py-24 bg-white">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="text-center mb-16">
+          <span className="uppercase tracking-[0.15em] text-xs font-semibold text-[#C9293A]">
+            Gallery
+          </span>
+          <h2 className="font-serif text-5xl font-black mt-4 mb-6">
+            Media Literacy
+            <span className="text-[#C9293A] italic">
+              {" "}In Action
+            </span>
+          </h2>
+          <p className="max-w-3xl mx-auto text-gray-600 leading-8">
+            Explore moments from our community outreach,
+            digital literacy campaigns, media training sessions,
+            school engagements and public awareness programmes
+            across Zambia.
+          </p>
         </div>
-
-      ))}
-
-    </div>
-
-  </div>
-</section>
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
+          {[
+            "/images/mil1.jpg",
+            "/images/mil2.jpg",
+            "/images/mil5.jpg",
+            "/images/school2.jpg",
+            "/images/mil4.jpg",
+            "/images/note.jpg",
+          ].map((image, index) => (
+            <div
+              key={index}
+              className="overflow-hidden rounded-3xl group shadow-lg"
+            >
+              <img
+                src={image}
+                alt="MIL Activity"
+                className="w-full h-80 object-cover transition duration-700 group-hover:scale-110"
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
 
     {/* ── EXPLORE MORE (unchanged) ───────────────────────────────────────── */}
     <section className="py-24 bg-white">
@@ -499,51 +485,42 @@ const AboutMIL = () => (
         </div>
       </div>
     </section>
+
     {/* ======================= CTA ======================= */}
-<section className="py-24 bg-[#0B1324] text-white">
-
-  <div className="max-w-5xl mx-auto text-center px-6">
-
-    <span className="uppercase tracking-[0.15em] text-xs text-[#C9A84C] font-semibold">
-      Join The Movement
-    </span>
-
-    <h2 className="font-serif text-5xl font-black mt-5 mb-6 leading-tight">
-      Together We Can Build
-      <br />
-      <span className="text-[#C9A84C]">
-        A Media Literate Zambia
-      </span>
-    </h2>
-
-    <p className="text-white/70 text-lg leading-8 mb-10 max-w-3xl mx-auto">
-      Whether you are a school, community organisation,
-      media institution or development partner,
-      we invite you to collaborate with FPI Zambia in
-      promoting Media & Information Literacy.
-    </p>
-
-    <div className="flex justify-center gap-5 flex-wrap">
-
-      <Link
-        to="/contact"
-        className="bg-[#C9293A] px-8 py-4 rounded-xl font-semibold hover:bg-red-700 transition"
-      >
-        Contact Us
-      </Link>
-
-      <Link
-        to="/mil/hubs"
-        className="border border-white/30 px-8 py-4 rounded-xl hover:bg-white hover:text-[#0B1324] transition"
-      >
-        Explore MIL Hubs
-      </Link>
-
-    </div>
-
-  </div>
-
-</section>
+    <section className="py-24 bg-[#0B1324] text-white">
+      <div className="max-w-5xl mx-auto text-center px-6">
+        <span className="uppercase tracking-[0.15em] text-xs text-[#C9A84C] font-semibold">
+          Join The Movement
+        </span>
+        <h2 className="font-serif text-5xl font-black mt-5 mb-6 leading-tight">
+          Together We Can Build
+          <br />
+          <span className="text-[#C9A84C]">
+            A Media Literate Zambia
+          </span>
+        </h2>
+        <p className="text-white/70 text-lg leading-8 mb-10 max-w-3xl mx-auto">
+          Whether you are a school, community organisation,
+          media institution or development partner,
+          we invite you to collaborate with FPI Zambia in
+          promoting Media & Information Literacy.
+        </p>
+        <div className="flex justify-center gap-5 flex-wrap">
+          <Link
+            to="/contact"
+            className="bg-[#C9293A] px-8 py-4 rounded-xl font-semibold hover:bg-red-700 transition"
+          >
+            Contact Us
+          </Link>
+          <Link
+            to="/mil/hubs"
+            className="border border-white/30 px-8 py-4 rounded-xl hover:bg-white hover:text-[#0B1324] transition"
+          >
+            Explore MIL Hubs
+          </Link>
+        </div>
+      </div>
+    </section>
 
   </div>
 );

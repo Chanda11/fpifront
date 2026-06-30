@@ -8,14 +8,8 @@ import {
   Users,
   MapPin,
   ArrowRight,
-  TrendingUp,
-  Shield,
-  BookOpen,
-  Scale,
-  FileText,
   Radio,
   Map,
-  BookOpenCheck,
   X,
   Target,
   Award,
@@ -37,7 +31,6 @@ type Activity = {
   location: string;
   participants: number;
   category: "training" | "workshop" | "webinar" | "dialogue";
-  // New fields for modal
   fullDescription?: string;
   objectives?: string[];
   outcomes?: string[];
@@ -184,7 +177,7 @@ const Eyebrow = ({ label, light = false }: { label: string; light?: boolean }) =
   </div>
 );
 
-// Animation variants (unchanged)
+// Animation variants
 const sectionVariants: Variants = {
   hidden: { opacity: 0, y: 30 },
   visible: {
@@ -255,6 +248,7 @@ const Home = () => {
     },
   ];
 
+  // ========== ONLY TWO QUICK ACCESS ITEMS ==========
   const quickAccess = [
     {
       title: "Explore MIL Hubs",
@@ -262,13 +256,6 @@ const Home = () => {
       icon: Map,
       color: "#2563EB",
       link: "/mil/hubs",
-    },
-    {
-      title: "View Brochure",
-      description: "Download and learn more about the MIL programme.",
-      icon: BookOpenCheck,
-      color: "#EA580C",
-      link: "/mil/brochure",
     },
     {
       title: "Radio Spots",
@@ -292,7 +279,6 @@ const Home = () => {
   const aboutRef = useScrollReveal();
   const activitiesRef = useScrollReveal();
 
-
   // Modal handlers
   const openModal = (activity: Activity) => {
     setModalActivity(activity);
@@ -304,7 +290,6 @@ const Home = () => {
     document.body.style.overflow = "auto";
   };
 
-  // Close on Escape key
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === "Escape") closeModal();
@@ -481,7 +466,6 @@ const Home = () => {
         }
       `}</style>
 
-      {/* Hero, Quick Access, Welcome, About, etc. – unchanged */}
       {/* ========== HERO CAROUSEL ========== */}
       <div style={{ position: "relative", width: "100%", height: "100vh", minHeight: 500, overflow: "hidden", paddingBottom: 0 }}>
         <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, zIndex: 10, background: "linear-gradient(90deg, #2563EB, #EA580C, #F59E0B, #EA580C, #2563EB)" }} />
@@ -541,7 +525,7 @@ const Home = () => {
         </Swiper>
       </div>
 
-      {/* ========== QUICK ACCESS ========== */}
+      {/* ========== QUICK ACCESS - Two cards, properly arranged ========== */}
       <motion.section
         initial="hidden"
         whileInView="visible"
@@ -555,15 +539,11 @@ const Home = () => {
           whileInView="visible"
           viewport={{ once: true }}
           style={{
-            maxWidth: 1100,
+            maxWidth: 800, // slightly narrower to keep cards neat
             margin: "0 auto",
             display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
-            background: "#ffffff",
-            borderRadius: 20,
-            overflow: "hidden",
-            boxShadow: "0 20px 60px rgba(0,0,0,0.08)",
-            border: "1px solid rgba(226, 232, 240, 0.6)",
+            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+            gap: 24,
           }}
         >
           {quickAccess.map((item, index) => {
@@ -574,27 +554,23 @@ const Home = () => {
                 variants={cardVariants}
                 whileHover={{
                   y: -6,
-                  boxShadow: "0 12px 40px rgba(0,0,0,0.10)",
+                  boxShadow: "0 16px 40px rgba(0,0,0,0.10)",
                   transition: { type: "spring", stiffness: 300 },
                 }}
                 style={{
-                  position: "relative",
+                  background: "#ffffff",
+                  borderRadius: 20,
                   padding: "28px 24px 24px",
+                  border: "1px solid rgba(226, 232, 240, 0.6)",
+                  boxShadow: "0 6px 20px rgba(0,0,0,0.04)",
                   display: "flex",
                   flexDirection: "column",
-                  gap: 6,
-                  background: "#fff",
-                  borderRight: index < quickAccess.length - 1 ? "1px solid #F1F5F9" : "none",
-                  transition: "background 0.2s",
+                  position: "relative",
+                  transition: "box-shadow 0.2s, transform 0.2s",
                   cursor: "pointer",
                 }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = "#FAFBFF";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = "#fff";
-                }}
               >
+                {/* Top accent stripe */}
                 <div
                   style={{
                     position: "absolute",
@@ -615,16 +591,15 @@ const Home = () => {
                     color: "inherit",
                     display: "flex",
                     flexDirection: "column",
-                    gap: 6,
                     flex: 1,
                   }}
                 >
-                  <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 4 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 10 }}>
                     <div
                       style={{
-                        width: 48,
-                        height: 48,
-                        borderRadius: 14,
+                        width: 52,
+                        height: 52,
+                        borderRadius: 16,
                         background: `${item.color}10`,
                         display: "flex",
                         alignItems: "center",
@@ -633,14 +608,14 @@ const Home = () => {
                         border: `1px solid ${item.color}20`,
                       }}
                     >
-                      <Icon size={22} color={item.color} strokeWidth={1.8} />
+                      <Icon size={24} color={item.color} strokeWidth={1.8} />
                     </div>
-                    <p style={{ fontSize: 14, fontWeight: 700, margin: 0, color: "#1A1A2E", letterSpacing: "-0.01em" }}>
+                    <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0, color: "#1A1A2E" }}>
                       {item.title}
-                    </p>
+                    </h3>
                   </div>
 
-                  <p style={{ fontSize: 12, color: "#64748B", margin: 0, lineHeight: 1.6, paddingRight: 4 }}>
+                  <p style={{ fontSize: 13, color: "#64748B", margin: "0 0 12px 0", lineHeight: 1.6 }}>
                     {item.description}
                   </p>
 
@@ -651,15 +626,15 @@ const Home = () => {
                       display: "inline-flex",
                       alignItems: "center",
                       gap: 6,
-                      fontSize: 11,
+                      fontSize: 12,
                       fontWeight: 600,
                       color: item.color,
-                      marginTop: 10,
+                      marginTop: "auto",
                       textTransform: "uppercase",
                       letterSpacing: "0.04em",
                     }}
                   >
-                    Explore <ArrowRight size={12} style={{ transition: "transform 0.2s" }} />
+                    Explore <ArrowRight size={14} style={{ transition: "transform 0.2s" }} />
                   </motion.span>
                 </Link>
               </motion.div>
@@ -726,7 +701,7 @@ const Home = () => {
         </div>
       </motion.section>
 
-      {/* ========== ACTIVITIES SECTION (unchanged except "Learn More" now opens modal) ========== */}
+      {/* ========== ACTIVITIES SECTION ========== */}
       <motion.section
         ref={activitiesRef}
         className="sr-section"
@@ -819,7 +794,6 @@ const Home = () => {
                           <span style={{ display: "inline-flex", alignItems: "center", gap: 3 }}><MapPin size={10} /> {activity.location}</span>
                           <span style={{ display: "inline-flex", alignItems: "center", gap: 3 }}><Users size={10} /> {activity.participants}</span>
                         </div>
-                        {/* Updated "Learn More" to open modal */}
                         <button
                           onClick={() => openModal(activity)}
                           className="pill-link"
@@ -837,14 +811,14 @@ const Home = () => {
         </div>
       </motion.section>
 
-      {/* ========== MEDIA HIGHLIGHTS ========== */}
-      {/* ... unchanged ... */}
+      {/* ========== MEDIA HIGHLIGHTS (unchanged) ========== */}
+      {/* ... you would have this section here; keep your existing code ... */}
 
-      {/* ========== FOCUS AREAS ========== */}
-      {/* ... unchanged ... */}
+      {/* ========== FOCUS AREAS (unchanged) ========== */}
+      {/* ... keep existing ... */}
 
-      {/* ========== GALLERY ========== */}
-      {/* ... unchanged ... */}
+      {/* ========== GALLERY (unchanged) ========== */}
+      {/* ... keep existing ... */}
 
       {/* ========== MODAL ========== */}
       {modalActivity && (
