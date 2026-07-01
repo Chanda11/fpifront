@@ -276,10 +276,6 @@ const Home = () => {
 
   const categories = [
     { id: "all", name: "All", icon: "📋" },
-    { id: "training", name: "Trainings", icon: "🎓" },
-    { id: "workshop", name: "Workshops", icon: "🔧" },
-    { id: "webinar", name: "Webinars", icon: "💻" },
-    { id: "dialogue", name: "Dialogues", icon: "💬" },
   ];
 
   const focusAreas = [
@@ -455,7 +451,7 @@ const Home = () => {
             grid-template-columns: repeat(2, 1fr) !important;
           }
           .hero-container {
-            height: 80vh !important;
+            height: 100vh !important;
             min-height: 400px !important;
           }
           .section-padding {
