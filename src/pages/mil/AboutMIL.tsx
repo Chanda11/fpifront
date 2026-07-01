@@ -343,7 +343,7 @@ const AboutMIL = () => (
             />
             <div className="absolute inset-0 bg-black/40 rounded-3xl" />
             <a
-              href="https://youtube.com/"
+              href="https://youtu.be/JCEkhLTRqfY?si=HRY5X4ga2B83d59j"
               target="_blank"
               rel="noreferrer"
               className="absolute inset-0 flex items-center justify-center"
