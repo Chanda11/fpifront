@@ -455,57 +455,67 @@ const AboutMIL = () => (
       </div>
     </section>
 
-    {/* ── EXPLORE MORE (unchanged) ───────────────────────────────────────── */}
-    <section className="py-24 bg-white">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center mb-16">
-          <span className="uppercase tracking-[0.15em] text-xs font-semibold text-[#C9293A]">
-            Explore More
-          </span>
-          <h2 className="font-serif text-5xl font-black mt-4">Resources & Opportunities</h2>
+{/* ── EXPLORE MORE ───────────────────────────────────────── */}
+<section className="py-24 bg-white">
+  <div className="max-w-7xl mx-auto px-6">
+    <div className="text-center mb-16">
+      <span className="uppercase tracking-[0.15em] text-xs font-semibold text-[#C9293A]">
+        Explore More
+      </span>
+      <h2 className="font-serif text-5xl font-black mt-4">Resources & Opportunities</h2>
+    </div>
+    <div className="grid md:grid-cols-2 gap-10">
+      {/* BROCHURE */}
+      <Link
+        to="/mil/brochure"
+        className="group rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300"
+      >
+        <div className="relative overflow-hidden aspect-[4/3] md:aspect-auto md:h-80">
+          <img
+            src="/images/broch.png"
+            alt="MIL Brochure"
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            onError={(e) => {
+              // fallback if image fails
+              e.currentTarget.src =
+                "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='320' viewBox='0 0 400 320'%3E%3Crect fill='%23f0f0f0' width='400' height='320'/%3E%3Ctext x='50%25' y='50%25' font-family='sans-serif' font-size='20' fill='%23999' text-anchor='middle' dy='.3em'%3EBrochure%3C/text%3E%3C/svg%3E";
+            }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+          <div className="absolute bottom-8 left-8 text-white">
+            <span className="uppercase text-xs tracking-[0.15em]">Publication</span>
+            <h3 className="font-serif text-4xl font-black mt-2">MIL Brochure</h3>
+            <p className="text-white/80 mt-2">Learn more about our initiatives</p>
+          </div>
         </div>
-        <div className="grid md:grid-cols-2 gap-10">
-          {/* BROCHURE */}
-          <Link
-            to="/mil/brochure"
-            className="group rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300"
-          >
-            <div className="relative overflow-hidden">
-              <img
-                src="/images/broch.png"
-                alt="MIL Brochure"
-                className="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
-              <div className="absolute bottom-8 left-8 text-white">
-                <span className="uppercase text-xs tracking-[0.15em]">Publication</span>
-                <h3 className="font-serif text-4xl font-black mt-2">MIL Brochure</h3>
-                <p className="text-white/80 mt-2">Learn more about our initiatives</p>
-              </div>
-            </div>
-          </Link>
-          {/* HUBS */}
-          <Link
-            to="/mil/hubs"
-            className="group rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300"
-          >
-            <div className="relative overflow-hidden">
-              <img
-                src="/images/community.jpg"
-                alt="MIL Hubs"
-                className="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
-              <div className="absolute bottom-8 left-8 text-white">
-                <span className="uppercase text-xs tracking-[0.15em]">Community Network</span>
-                <h3 className="font-serif text-4xl font-black mt-2">MIL Hubs</h3>
-                <p className="text-white/80 mt-2">Explore learning opportunities across Zambia</p>
-              </div>
-            </div>
-          </Link>
+      </Link>
+
+      {/* HUBS */}
+      <Link
+        to="/mil/hubs"
+        className="group rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300"
+      >
+        <div className="relative overflow-hidden aspect-[4/3] md:aspect-auto md:h-80">
+          <img
+            src="/images/community.jpg"
+            alt="MIL Hubs"
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            onError={(e) => {
+              e.currentTarget.src =
+                "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='320' viewBox='0 0 400 320'%3E%3Crect fill='%23f0f0f0' width='400' height='320'/%3E%3Ctext x='50%25' y='50%25' font-family='sans-serif' font-size='20' fill='%23999' text-anchor='middle' dy='.3em'%3EMIL Hubs%3C/text%3E%3C/svg%3E";
+            }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+          <div className="absolute bottom-8 left-8 text-white">
+            <span className="uppercase text-xs tracking-[0.15em]">Community Network</span>
+            <h3 className="font-serif text-4xl font-black mt-2">MIL Hubs</h3>
+            <p className="text-white/80 mt-2">Explore learning opportunities across Zambia</p>
+          </div>
         </div>
-      </div>
-    </section>
+      </Link>
+    </div>
+  </div>
+</section>
 
     {/* ======================= CTA ======================= */}
     <section className="py-24 bg-[#0B1324] text-white">
