@@ -35,6 +35,34 @@ const pillars = [
   },
 ];
 
+// ─── impact highlights data (replaces the image gallery) ──────────────────────
+const impactHighlights = [
+  {
+    bg: RED,
+    icon: <BookOpen size={22} color="#fff" />,
+    value: "100+",
+    label: "Training Sessions Delivered",
+  },
+  {
+    bg: GOLD,
+    icon: <Users size={22} color="#fff" />,
+    value: "13+",
+    label: "Active MIL Hubs",
+  },
+  {
+    bg: "#185FA5",
+    icon: <Globe size={22} color="#fff" />,
+    value: "4",
+    label: "Provinces Reached",
+  },
+  {
+    bg: "#2d6a4f",
+    icon: <ShieldCheck size={22} color="#fff" />,
+    value: "1,000+",
+    label: "Citizens & Journalists Trained",
+  },
+];
+
 // ─── reusable eyebrow ─────────────────────────────────────────────────────────
 function Eyebrow({ label, light = false }: { label: string; light?: boolean }) {
   return (
@@ -390,44 +418,37 @@ const AboutMIL = () => (
       </div>
     </section>
 
-    {/* ======================= MIL IN ACTION ======================= */}
-    <section className="py-24 bg-white">
+    {/* ======================= IMPACT HIGHLIGHTS (replaces the image Gallery — no images, mobile-safe) ======================= */}
+    <section className="py-24 bg-[#0B1324] text-white">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
-          <span className="uppercase tracking-[0.15em] text-xs font-semibold text-[#C9293A]">
-            Gallery
+          <span className="uppercase tracking-[0.15em] text-xs font-semibold text-[#C9A84C]">
+            Our Impact
           </span>
           <h2 className="font-serif text-5xl font-black mt-4 mb-6">
             Media Literacy
-            <span className="text-[#C9293A] italic">
-              {" "}In Action
-            </span>
+            <span className="text-[#C9A84C] italic"> In Action</span>
           </h2>
-          <p className="max-w-3xl mx-auto text-gray-600 leading-8">
-            Explore moments from our community outreach,
-            digital literacy campaigns, media training sessions,
-            school engagements and public awareness programmes
-            across Zambia.
+          <p className="max-w-3xl mx-auto text-white/70 leading-8">
+            From community outreach and digital literacy campaigns to
+            media training sessions and school engagements, here's a
+            snapshot of the reach FPI Zambia has built across the country.
           </p>
         </div>
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
-          {[
-            "/images/mil1.jpg",
-            "/images/mil2.jpg",
-            "/images/mil5.jpg",
-            "/images/school2.jpg",
-            "/images/mil4.jpg",
-            "/images/note.jpg",
-          ].map((image, index) => (
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {impactHighlights.map((item) => (
             <div
-              key={index}
-              className="overflow-hidden rounded-3xl group shadow-lg"
+              key={item.label}
+              className="bg-white/5 border border-white/10 rounded-2xl p-8 text-center hover:bg-white/10 transition"
             >
-              <img
-                src={image}
-                alt="MIL Activity"
-                className="w-full h-80 object-cover transition duration-700 group-hover:scale-110"
-              />
+              <div
+                className="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-5"
+                style={{ background: item.bg }}
+              >
+                {item.icon}
+              </div>
+              <h3 className="font-serif text-4xl font-black mb-2">{item.value}</h3>
+              <p className="text-white/70 text-sm">{item.label}</p>
             </div>
           ))}
         </div>

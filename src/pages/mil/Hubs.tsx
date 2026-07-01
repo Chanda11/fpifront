@@ -42,9 +42,31 @@ const stats = [
 // ─── Single background image (same as Brochure pattern) ──────
 const BG = "/images/activity-2.jpg";
 
+// ─── Mobile-safety styles ──────────────────────────────────────
+// 1. backgroundAttachment:"fixed" is removed from every section below
+//    because it silently fails to paint on many mobile browsers
+//    (especially iOS Safari) — this was making backgrounds vanish
+//    entirely, not just crop, on phones.
+// 2. The floating "peek-out" images use negative offsets (e.g.
+//    bottom:-32, right:-32) that were designed for wide desktop
+//    layouts. On a narrow phone the same offset pushes most of the
+//    image outside its parent section, which clips it via
+//    overflow:hidden — so it effectively disappears. This class
+//    hides those floating accent images on small screens instead of
+//    letting them get clipped.
+const MobileImgFix = () => (
+  <style>{`
+    @media (max-width: 640px) {
+      .mil-floating-img {
+        display: none;
+      }
+    }
+  `}</style>
+);
+
 // ─── Section helpers (mirrors Brochure's BgSection / LightSection) ─
 
-/** Dark — photo shows through with tinted overlay, parallax scroll */
+/** Dark — photo shows through with tinted overlay */
 const BgSection = ({
   children,
   overlay = "rgba(10,3,0,0.80)",
@@ -74,7 +96,8 @@ const BgSection = ({
         backgroundImage: `url(${BG})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
-        backgroundAttachment: "fixed",
+        backgroundRepeat: "no-repeat",
+        // backgroundAttachment: "fixed" removed — fails to render on mobile browsers
       }}
     />
     <div style={{ position: "absolute", inset: 0, background: overlay }} />
@@ -84,7 +107,7 @@ const BgSection = ({
   </section>
 );
 
-/** Light — cream wash, image bleeds subtly at edges, parallax scroll */
+/** Light — cream wash, image bleeds subtly at edges */
 const LightSection = ({
   children,
   py = 80,
@@ -112,7 +135,8 @@ const LightSection = ({
         backgroundImage: `url(${BG})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
-        backgroundAttachment: "fixed",
+        backgroundRepeat: "no-repeat",
+        // backgroundAttachment: "fixed" removed — fails to render on mobile browsers
       }}
     />
     <div
@@ -227,7 +251,8 @@ const SectionDivider = ({ left, right }: { left: string; right: string }) => (
         backgroundImage: `url(${BG})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
-        backgroundAttachment: "fixed",
+        backgroundRepeat: "no-repeat",
+        // backgroundAttachment: "fixed" removed — fails to render on mobile browsers
       }}
     />
     <div style={{ position: "absolute", inset: 0, background: "rgba(255,248,240,0.95)" }} />
@@ -275,7 +300,9 @@ const Hubs = () => {
   return (
     <div style={{ fontFamily: "'Inter','Helvetica Neue',sans-serif", color: "#1A0A00" }}>
 
-      {/* ══ HERO (fixed background, animated content) ═══════════════ */}
+      <MobileImgFix />
+
+      {/* ══ HERO (background image, animated content) ═══════════════ */}
       <style>{`
         @keyframes fadeInUp {
           from {
@@ -306,7 +333,8 @@ const Hubs = () => {
           backgroundImage: `url(${BG})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
-          backgroundAttachment: "fixed",  // Static / fixed background
+          backgroundRepeat: "no-repeat",
+          // backgroundAttachment: "fixed" removed — fails to render on mobile browsers
         }}
       >
         <TopBar />
@@ -444,10 +472,11 @@ const Hubs = () => {
               />
             </div>
 
-            {/* Floating second image */}
+            {/* Floating second image — hidden on small screens (was getting clipped) */}
             <img
               src="/images/activity-2.jpg"
               alt="MIL Hubs Community"
+              className="mil-floating-img"
               style={{
                 position: "absolute",
                 bottom: -32,
@@ -638,9 +667,11 @@ const Hubs = () => {
               />
             </div>
 
+            {/* Floating image — hidden on small screens (was getting clipped) */}
             <img
               src="/images/activity-4.jpg"
               alt="MIL Activity"
+              className="mil-floating-img"
               style={{
                 position: "absolute",
                 bottom: -32,

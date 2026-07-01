@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination, Navigation, EffectFade } from "swiper/modules";
 import { motion, Variants } from "framer-motion";
-import QuickAccess from "../components/home/QuickAccess";
 import {
   Calendar,
   Users,
@@ -16,7 +15,6 @@ import {
   FileText,
   Radio,
   Map,
-  BookOpenCheck,
   Video,
   Headphones,
   PlayCircle,
@@ -787,7 +785,7 @@ const Home = () => {
                 <p style={{ color: "#64748B", lineHeight: 1.7, marginBottom: 25 }}>
                   Watch our latest documentary, interviews and community outreach programmes.
                 </p>
-                <a href="https://youtube.com/" target="_blank" rel="noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#DC2626", color: "#fff", padding: "12px 24px", borderRadius: 999, textDecoration: "none", fontWeight: 600 }}>
+                <a href="https://youtu.be/JCEkhLTRqfY?si=HRY5X4ga2B83d59j" target="_blank" rel="noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#DC2626", color: "#fff", padding: "12px 24px", borderRadius: 999, textDecoration: "none", fontWeight: 600 }}>
                   <PlayCircle size={18} /> Watch on YouTube
                 </a>
               </div>
