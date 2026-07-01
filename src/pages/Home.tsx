@@ -438,10 +438,37 @@ const Home = () => {
         @media (max-width: 640px) {
           .modal-content { padding: 24px; }
         }
+
+        /* ── RESPONSIVE FIXES ── */
+        @media (max-width: 640px) {
+          .quick-access-grid {
+            grid-template-columns: 1fr !important;
+            gap: 16px !important;
+          }
+          .media-highlights-grid {
+            grid-template-columns: 1fr !important;
+          }
+          .focus-grid {
+            grid-template-columns: 1fr !important;
+          }
+          .gallery-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+          }
+          .hero-container {
+            height: 80vh !important;
+            min-height: 400px !important;
+          }
+          .section-padding {
+            padding: 30px 16px !important;
+          }
+          .about-grid {
+            grid-template-columns: 1fr !important;
+          }
+        }
       `}</style>
 
       {/* ========== HERO CAROUSEL ========== */}
-      <div style={{ position: "relative", width: "100%", height: "100vh", minHeight: 500, overflow: "hidden", paddingBottom: 0 }}>
+      <div className="hero-container" style={{ position: "relative", width: "100%", height: "100vh", minHeight: 500, overflow: "hidden", paddingBottom: 0 }}>
         <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, zIndex: 10, background: "linear-gradient(90deg, #2563EB, #EA580C, #F59E0B, #EA580C, #2563EB)" }} />
         <Swiper
           modules={[Autoplay, Pagination, Navigation, EffectFade]}
@@ -504,6 +531,7 @@ const Home = () => {
         style={{ padding: "0 24px", marginTop: "40px", position: "relative", zIndex: 5 }}
       >
         <motion.div
+          className="quick-access-grid"
           variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
@@ -645,7 +673,7 @@ const Home = () => {
         style={{ padding: "40px 20px 60px", background: "#fff" }}
       >
         <div style={{ maxWidth: 1000, margin: "0 auto" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 32, alignItems: "center" }}>
+          <div className="about-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 32, alignItems: "center" }}>
             <motion.div variants={cardVariants} style={{ position: "relative" }}>
               <img src="/images/activity-1.jpg" alt="FPI Zambia Training" style={{ width: "100%", height: 280, objectFit: "cover", borderRadius: 20, boxShadow: "0 8px 24px rgba(0,0,0,0.1)" }} />
               <div style={{ position: "absolute", top: 16, left: 16, background: "linear-gradient(135deg,#2563EB,#EA580C)", color: "#fff", padding: "8px 14px", borderRadius: 14, textAlign: "center" }}>
@@ -773,7 +801,7 @@ const Home = () => {
               Explore our latest videos and radio programmes promoting media freedom and media literacy in Zambia.
             </p>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(420px,1fr))", gap: 30 }}>
+          <div className="media-highlights-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(420px,1fr))", gap: 30 }}>
             <div style={{ background: "#fff", borderRadius: 24, overflow: "hidden", boxShadow: "0 15px 40px rgba(0,0,0,.08)" }}>
               <img src="/images/youtube-logo.jpg" alt="YouTube" style={{ width: "100%", height: 260, objectFit: "cover" }} />
               <div style={{ padding: 30 }}>
@@ -827,6 +855,7 @@ const Home = () => {
             FPI Zambia works to strengthen media freedom, media literacy, democratic governance and community participation.
           </p>
           <motion.div
+            className="focus-grid"
             variants={staggerContainer}
             initial="hidden"
             whileInView="visible"
@@ -870,6 +899,7 @@ const Home = () => {
           <h2 style={{ fontFamily: "Georgia,serif", fontWeight: 800, fontSize: "clamp(1.4rem, 3.5vw, 2rem)", marginBottom: 6 }}>Photo Gallery</h2>
           <p style={{ color: "#6B7280", fontSize: 13, marginBottom: 32 }}>Highlights from FPI Zambia activities.</p>
           <motion.div
+            className="gallery-grid"
             variants={staggerContainer}
             initial="hidden"
             whileInView="visible"
